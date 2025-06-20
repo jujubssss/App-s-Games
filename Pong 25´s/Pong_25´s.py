@@ -1,6 +1,7 @@
 import pygame, sys
 from config import *
 from sprites import Barra, Bola
+from inicial import tela_inicial
 
 # Inicializa o Pygame
 pygame.init()
@@ -9,10 +10,10 @@ pygame.mixer.init()  # Inicializa o mixer de áudio
 # Carrega a música de fundo e o efeito sonoro
 pygame.mixer.music.load('assets/PinkFloyd.mp3')
 pygame.mixer.music.play(-1)  # Reproduz em loop
-hit_sound = pygame.mixer.Sound('assets/PointSound.mp3')
 
 pygame.display.set_caption('Pong')
 clock = pygame.time.Clock()
+hit_sound = pygame.mixer.Sound('assets/ImpactSound.mp3')
 
 # Inicializa as barras e a bola
 barra_esquerda = Barra(50, ALTURA_JANELA // 2 - ALTURA_BARRAS // 2)
@@ -26,6 +27,9 @@ font = pygame.font.Font(None, 74)
 
 # Carregando a imagem de fundo
 imagem_fundo = pygame.image.load('assets/sunrise.jpg')
+
+# Carrega o som de pontuação
+point_sound = pygame.mixer.Sound('assets/PointSound.mp3')
 
 # Loop principal do jogo
 fgExit = False
@@ -60,9 +64,11 @@ while not fgExit:
     # Verifica se a bola saiu da tela
     if bola.rect.left <= 0:
         pontos_direita += 1
+        point_sound.play()  # Toca o som de pontuação
         bola = Bola()  # Reinicia a bola
     if bola.rect.right >= LARGURA_JANELA:
         pontos_esquerda += 1
+        point_sound.play()  # Toca o som de pontuação
         bola = Bola()  # Reinicia a bola
 
     # Atualiza a tela
